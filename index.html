@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конкурсный бот</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Участие в конкурсе</h1>
+        <form id="contestForm">
+            <input type="text" id="username" placeholder="Введите ваш Telegram юзернейм" required>
+            <button type="submit">Отправить</button>
+        </form>
+        <p id="response" style="color: green; display: none;">Спасибо за участие!</p>
+        <p id="error" style="color: red; display: none;">Ошибка! Проверьте данные.</p>
+    </div>
+    <script>
+        document.getElementById('contestForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
+            });
+            const result = await response.json();
+            if (result.success) {
+                document.getElementById('response').style.display = 'block';
+                document.getElementById('error').style.display = 'none';
+            } else {
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('response').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
